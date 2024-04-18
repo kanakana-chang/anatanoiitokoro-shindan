@@ -25,6 +25,10 @@
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-analytics.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-auth.js";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -43,6 +47,31 @@
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
+      const auth = getAuth();
+
+      // 新規会員登録処理
+      const registerForm = document.getElementById("register-form");
+      const registerMailAddressInput = document.getElementById(
+        "registerMailAddress"
+      );
+      const registerPasswordInput = document.getElementById("registerPassword");
+      registerForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const mailAddress = registerMailAddressInput.value;
+        const password = registerPasswordInput.value;
+        if (!mailAddress || !password) {
+          return;
+        }
+        createUserWithEmailAndPassword(auth, mailAddress, password)
+          .then(() => {
+            // 新規会員登録フォームを初期化
+            registerMailAddressInput.value = "";
+            registerPasswordInput.value = "";
+          })
+          .catch((error) => {
+            alert("登録に失敗しました[" + error.message + "]");
+          });
+      });
     </script>
     <header>
       <nav class="navbar bg-primary" data-bs-theme="dark">
@@ -77,7 +106,86 @@
         </div>
       </div>
       <div id="tweet-area" class="mt-3"></div>
+
+      <div class="row">
+        <div class="col-lg-9">
+          <div id="user-area">
+            <hr />
+            ようこそ <span id="user-email-text"></span> さん
+            <button class="btn btn-primary" id="logoutButton">
+              ログアウト
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-9">
+          <div id="login-area">
+            <hr />
+            <h2>ログイン</h2>
+            <form action="#" id="login-form">
+              <div>
+                メールアドレス<input
+                  id="mailAddress"
+                  class="form-control"
+                  type="email"
+                  size="40"
+                  required
+                />
+              </div>
+              <div>
+                パスワード<input
+                  id="password"
+                  class="form-control"
+                  type="password"
+                  size="40"
+                  required
+                />
+              </div>
+              <p>
+                <button type="submit" class="btn btn-primary">ログイン</button>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-9">
+          <div id="register-area">
+            <hr />
+            <h2>新規会員登録</h2>
+            <form action="#" id="register-form">
+              <div>
+                メールアドレス<input
+                  id="registerMailAddress"
+                  class="form-control"
+                  type="email"
+                  size="40"
+                  required
+                />
+              </div>
+              <div>
+                パスワード<input
+                  id="registerPassword"
+                  class="form-control"
+                  type="password"
+                  size="40"
+                  required
+                />
+              </div>
+              <p>
+                <button type="submit" class="btn btn-primary">
+                  新規会員登録
+                </button>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
+
     <script src="assessment.js"></script>
   </body>
 </html>

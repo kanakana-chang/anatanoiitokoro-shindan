@@ -1,0 +1,2 @@
+# anatanoiitokoro-shindan
+firebase公開用のあなたのいいところ診断です
